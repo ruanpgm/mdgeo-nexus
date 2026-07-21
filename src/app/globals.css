@@ -1,26 +1,240 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-warning: var(--sidebar-warning);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-neutral: var(--neutral);
+  --color-neutral-foreground: var(--neutral-foreground);
+  --color-brand-blue-logo: var(--brand-blue-logo);
+  --color-brand-green-logo: var(--brand-green-logo);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-success-foreground: var(--success-foreground);
+  --color-success: var(--success);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-warning: var(--warning);
+  --color-info-foreground: var(--info-foreground);
+  --color-info: var(--info);
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-foreground: var(--brand-green-foreground);
+  --color-chart-blue: var(--chart-blue);
+  --color-chart-green: var(--chart-green);
+  --color-chart-neutral: var(--chart-neutral);
+  --color-surface-tint: var(--surface-tint);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #F5F7FC;
+  --foreground: #333333;
+  --card: #FFFFFF;
+  --card-foreground: #333333;
+  --popover: #FFFFFF;
+  --popover-foreground: #333333;
+  /* Ação. Hue 209 da marca preservado. Revisão R3 (2026-07-21): #0A59A3 -> #0F71CC,
+     lightness 34%->43%. R1/R2 trataram o ícone do chip do KpiCard como texto
+     (piso 4.5:1) quando é objeto gráfico (piso 3:1) — sobre-restrição que travava
+     o azul no escuro. Destravado: L43 é o teto que ainda dá branco-no-botão e
+     link-sobre-página >= 4.5. Ver docs/dna-visual.md §4 Revisão R3. */
+  --primary: #0F71CC;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F0F1F7;
+  --secondary-foreground: #17144B;
+  --muted: #F3F3F7;
+  --muted-foreground: #6B6F80;
+  --accent: #EAF0F5;
+  --accent-foreground: #17144B;
+  --destructive: #B42318;
+  --destructive-foreground: #FFFFFF;
+  --border: #E7E7EF;
+  --input: #E7E7EF;
+  --ring: #0F71CC;
+  /* Eixo de risco. Tint 12% com texto da própria cor; pior caso >= 5.0:1 sobre
+     #FFFFFF e #F5F7FC. Só `destructive` renderiza sólido (lei do preenchimento). */
+  --success: #0E722C;
+  --success-foreground: #FFFFFF;
+  --warning: #9C3D07;
+  --warning-foreground: #FFFFFF;
+  --info: #0C6178;
+  --info-foreground: #FFFFFF;
+  --neutral: #475467;
+  --neutral-foreground: #FFFFFF;
+  /* Revisão R3 (2026-07-21): DESACOPLADO de --success (R1/R2 usavam o mesmo hex por
+     conveniência). --brand-green só aparece como fill do gradiente do Hero (texto
+     branco GRANDE em cima, piso 3:1) — pode ser bem mais claro/vívido que --success,
+     que carrega texto pequeno (piso 4.5:1). #0F9939, hue 138 (mesma correção
+     "sair do oliva" das revisões anteriores), branco-grande = 3.73. Nunca usar este
+     token onde --success entraria (badge, número, texto). Ver docs/dna-visual.md §4 R3. */
+  --brand-green: #0F9939;
+  --brand-green-foreground: #FFFFFF;
+  /* Marca em cheio. Só o logo: reprovam AA sobre fundo claro e não podem vazar
+     para a UI. Separados de --primary/--brand-green para que ajustar a UI não
+     mexa no logo. */
+  --brand-blue-logo: #769ABC;
+  --brand-green-logo: #7DBD67;
+  /* Séries alinhadas ao eixo semântico: um gráfico e uma tabela do mesmo dado
+     têm que usar a mesma cor. Piso de 3:1 (objeto gráfico), não 4.5:1. */
+  --chart-blue: #0F71CC;
+  --chart-green: #0E722C;
+  --chart-neutral: #667085;
+  --surface-tint: #EEF2FA;
+  --chart-1: #0F71CC;
+  --chart-2: #0E722C;
+  --chart-3: #9C3D07;
+  --chart-4: #0C6178;
+  --chart-5: #667085;
+  --radius: 0.5rem;
+  --sidebar: #12233A;
+  --sidebar-foreground: #D7E3EE;
+  --sidebar-primary: #769ABC;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1C3A56;
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #769ABC;
+  /* O sidebar é uma ilha escura dentro da página clara, então os semânticos do
+     modo claro não servem nele: --warning (#9C3D07) dá 2.11:1 aqui. Precisa da
+     versão clara, a mesma lógica do dark mode. */
+  --sidebar-warning: #FDB022;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: #76AFE5;
+  --primary-foreground: #14232E;
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: #F97066;
+  --destructive-foreground: #1A0605;
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: #76AFE5;
+  /* Dark é superfície só de dashboard (o campo nunca escurece — ver DNA §5).
+     Mesmos hues do modo claro, clareados para inverter o contraste. Revisão R2
+     (2026-07-20): azul e verde acompanham o ganho de croma do claro (mesmos hues
+     209/138, mais saturados). Ver docs/dna-visual.md §4 Revisão R2. */
+  --success: #5AD880;
+  --success-foreground: #122008;
+  --warning: #F0904A;
+  --warning-foreground: #1F0C02;
+  --info: #4EBBD8;
+  --info-foreground: #04212A;
+  --neutral: #98A2B3;
+  --neutral-foreground: #0B1220;
+  --brand-green: #5AD880;
+  --brand-green-foreground: #122008;
+  --brand-blue-logo: #769ABC;
+  --brand-green-logo: #7DBD67;
+  --chart-blue: #76AFE5;
+  --chart-green: #5AD880;
+  --chart-neutral: #94A3B8;
+  --surface-tint: #17233A;
+  --chart-1: #76AFE5;
+  --chart-2: #5AD880;
+  --chart-3: #F0904A;
+  --chart-4: #4EBBD8;
+  --chart-5: #98A2B3;
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #76AFE5;
+  --sidebar-primary-foreground: #14232E;
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-warning: #FDB022;
+}
+
+/* Superfície de campo: sol forte, luvas, EPI, pressa. Não é um breakpoint —
+   é um modo, e o mockup o renderiza dentro de um DeviceFrame no desktop.
+   Ver docs/dna-visual.md §5. Dark mode nunca se aplica aqui: superfície escura
+   no sol tem contraste ambiente péssimo. */
+[data-density="field"] {
+  --background: #FFFFFF;
+  --foreground: #0B1220;
+  --card: #FFFFFF;
+  --card-foreground: #0B1220;
+  /* 2px, não 1px: hairline some sob sol forte. */
+  --border: #667085;
+  --input: #667085;
+  --muted-foreground: #475467;
+
+  --field-target: 56px;        /* piso de alvo — 44px gera mis-tap com luva */
+  --field-target-primary: 64px; /* ação primária da tela */
+  --field-text-min: 1rem;      /* 16px, piso absoluto */
+  --field-border-width: 2px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+  /* Alvo grande + sistema apertado. Sem isto, 56px lê como "feito às pressas"
+     em vez de "dimensionado para luva" — ver o risco nomeado no DNA §5. */
+  [data-density="field"] {
+    font-size: var(--field-text-min);
+  }
+  [data-density="field"] button:not([data-slot="icon-only"]),
+  [data-density="field"] a[role="button"],
+  [data-density="field"] [role="checkbox"],
+  [data-density="field"] [role="radio"] {
+    min-height: var(--field-target);
+  }
 }
