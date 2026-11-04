@@ -45,3 +45,6 @@ next-env.d.ts
 
 # graphify (grafo de conhecimento gerado localmente, regenerável)
 graphify-out/
+
+.vercel
+.env*
